@@ -20,29 +20,15 @@ suppressPackageStartupMessages({
   required_bioc_packages <- c("limma", "clusterProfiler", 
                               "org.Rn.eg.db", "org.Hs.eg.db")
   
-  # Function to check and install CRAN packages
-  check_install_cran_packages <- function(packages) {
+  load_packages <- function(packages) {
     for (package in packages) {
-      if (!require(package, character.only = TRUE)) {
-        install.packages(package)
-      }
-      library(package, character.only = TRUE)
-    }
-  }
-  
-  # Function to check and install Bioconductor packages
-  check_install_bioc_packages <- function(packages) {
-    for (package in packages) {
-      if (!require(package, character.only = TRUE, quietly = TRUE)) {
-        BiocManager::install(package)
-      }
       library(package, character.only = TRUE)
     }
   }
   
   # Check and install required packages
-  check_install_cran_packages(required_cran_packages)
-  check_install_bioc_packages(required_bioc_packages)
+  load_packages(required_cran_packages)
+  load_packages(required_bioc_packages)
 })
 
 
@@ -529,8 +515,8 @@ for (main_part in names(go_results)) {
 
 # Summarize unique GO terms
 unique_go_summary <- unique_go_terms %>%
-  group_by(GO_ID, Ontology, Description) %>%
-  summarize(Subpart_Count = n_distinct(Subpart))
+  group_by(GO_ID, ontology, description) %>%
+  summarize(Subpart_Count = n_distinct(comparison))
 
 # Initialize a list to store data frames for each gene
 gene_annotation_counts_list <- vector("list", length(gene_go_list))
